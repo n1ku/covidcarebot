@@ -4,23 +4,24 @@ import {
   View, 
   Platform,
   Dimensions, 
-  ScrollView
+  ScrollView,
+  Alert
 } from 'react-native';
 import Slider from 'react-native-slider';
 import Constants from 'expo-constants';
 import { 
   ThemeProvider,
-  Header, 
-  Button, 
+  Header,  
   Input,
   Divider,
   Text,
   Icon,
-  CheckBox 
+  CheckBox,
+  Button 
 } from 'react-native-elements';
 import { useFonts } from '@use-expo/font';
 import { AppLoading } from 'expo';
-import { NotificationWrapper } from './libs/Notifications';
+import { NotificationWrapper, InitNotification } from './libs/Notifications';
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
 
@@ -77,7 +78,7 @@ export default function App() {
 
   //#region Notification implementation
 
-  
+
 
  
   //#endregion
@@ -258,7 +259,26 @@ export default function App() {
 
 
 
-        </ScrollView>        
+        </ScrollView>
+        <View>
+          <Button 
+            icon={
+              <Icon
+                name="heartbeat"
+                size={15}
+                iconLeft
+                color="white"
+                iconStyle={{
+                  marginRight: 20
+                }}
+                />
+            }
+            title="Submit"
+            onPress={() => {
+              Alert.alert("Thank you!")
+            }}
+          />
+        </View>
       </ThemeProvider>
       //#endregion
     );
@@ -271,7 +291,6 @@ const theme = {
     default: 'red',
   },
   Header: {
-    backgroundColor: 'red',
     centerComponent: {
       style:{
         color: '#2089DC',
@@ -289,7 +308,7 @@ const theme = {
   Text: {
       h4Style:{
         fontSize: 20,
-        fontFamily: 'Inter-Light',
+        fontFamily: 'Inter-ExtraLight',
         marginTop: 5,
         marginRight: 10,
         marginLeft: 10,
@@ -325,7 +344,7 @@ const theme = {
     center: true,
     size: 20,
     height: 50,
-    fontFamily: 'Inter-Light',
+    fontFamily: 'Inter-ExtraLight',
     containerStyle: {
       backgroundColor: 'white',
       borderColor: 'white',
