@@ -119,3 +119,27 @@ export class NotificationWrapper {
 
 
 }
+
+export class InitNotification extends Component {
+        static inti(){}
+        componentDidMount(){
+            NotificationWrapper.init();
+            
+            /* this.notificationSubscriber = */
+            NotificationWrapper.addListener(this.onNotificationPress);
+            let dummyNotification = {
+                title:"Good afternoon, Mr.Nobody",
+                body:"How are you feeling today?",
+                categoryId:"notifyUser", // see lib/notifications.js
+            }
+            NotificationWrapper.push(dummyNotification);
+        }
+
+        async onNotificationPress(notification){
+            console.log(notification);
+            Vibration.vibrate();
+            Alert.alert("test");
+        //Notification.setState({notification:notification})
+        }
+    
+}
