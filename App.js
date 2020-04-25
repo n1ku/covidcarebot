@@ -41,12 +41,7 @@ export default class App extends React.Component {
           <View style={styles.inputYearOfBirth}>
             <Input
               leftIcon={
-                <Icon
-                  name="user-plus"
-                  type="font-awesome"
-                  color="#86939e"
-                  size={15}
-                />
+                <Icon name="user-plus"/>
               }
               leftIconContainerStyle={{ marginLeft: 0, marginRight: 10 }}
               containerStyle={styles.inputContainerStyle}
@@ -56,13 +51,25 @@ export default class App extends React.Component {
             />
           </View>
           <View style={styles.checkBoxStyle}>
-            <Text>Gender</Text>
+            <Icon name="venus-mars" style={styles.genderIcon}/>
             <CheckBox title="Male"/>
             <CheckBox title="Female"/>
             <CheckBox title="Other"/>
             
           </View>
-          
+          <Divider/>
+          <View style={styles.inputYearOfBirth}>
+            <Input
+              leftIcon={
+                <Icon name="compass"/>
+              }
+              leftIconContainerStyle={{ marginLeft: 0, marginRight: 10 }}
+              containerStyle={styles.inputContainerStyle}
+              placeholder="ZIP Code"
+              keyboardType="numeric"
+              maxLength={4}
+            />
+          </View>
 
           
         </View>
@@ -119,12 +126,18 @@ const theme = {
   CheckBox: {
     center: true,
     size: 20,
+  },
+  Icon: {
+    type: "font-awesome",
+    color: "#86939e",
+    size: 25,
   }
 }
 
 const styles = StyleSheet.create({
   defaultView: {
-    backgroundColor: '#ccc',
+    backgroundColor: '#fff',
+
   },
   inputContainerStyle: {
     marginTop: 16,
@@ -134,5 +147,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     marginVertical: 0.1,
     marginRight: 0.5,
+  },
+  genderIcon: {
+    margin: 10,
   },
 });
