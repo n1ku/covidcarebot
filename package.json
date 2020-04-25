@@ -8,7 +8,9 @@
     "eject": "expo eject"
   },
   "dependencies": {
+    "@expo/vector-icons": "^10.0.0",
     "@fortawesome/react-native-fontawesome": "^0.2.3",
+    "@use-expo/font": "^2.0.0",
     "expo": "~37.0.3",
     "expo-constants": "~9.0.0",
     "react": "~16.9.0",
@@ -17,7 +19,6 @@
     "react-native-date-picker": "^2.7.9",
     "react-native-elements": "^1.2.7",
     "react-native-slider": "^0.11.0",
-    "react-native-vector-icons": "^6.6.0",
     "react-native-web": "~0.11.7"
   },
   "devDependencies": {
