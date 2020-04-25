@@ -1,145 +1,46 @@
-import { Component } from 'react';
+import React, { useEffect } from 'react';
+import { Input } from 'react-native-elements';
+
+import { Keyboard } from 'react-native';
 import { Notifications } from 'expo';
 import * as Permissions from 'expo-permissions';
 import Constants from 'expo-constants';
 
 
-const categories = [
-    {
-        actionId: 'userWellness',
-        button: {
-            submitButtonTitle:'Good',
-            placeholder:'good',
-        },
-        buttonTitle:'Good',
-        isDestructive: false,
-        isAuthenticationRequired: false,
-        button: {
-            submitButtonTitle: 'Bad',
-            placeholder: 'bad',
-        },
-        buttonTitle:'Bad',
-        isDestructive: false,
-        isAuthenticationRequired: false,
-    },
-    {
-        actionId: 'dailyCheckup',
-        buttonTitle:'Check-up',
-        isDestructive: false,
-        isAuthenticationRequired: false,
-    }
-];
+const onSubmit = text => {
+  Keyboard.dismiss();
+  const schedulingOptions = {
+    time: new Date().getTime() + Number(text),
+  };
+  // Notifications show only when app is not active.
+  // (ie. another app being used or device's screen is locked)
+  Notifications.scheduleLocalNotificationAsync(
+    localNotification,
+    schedulingOptions,
+  );
+};
+  handleNotification = () => {
+  console.warn('ok! got your notif');
+};
 
-export class NotificationWrapper {
+const askNotification = async () => {
+  // We need to ask for Notification permissions for ios devices
+  const { status } = await Permissions.askAsync(Permissions.NOTIFICATIONS);
+  if (Constants.isDevice && status === 'granted')
+    console.log('Notification permissions granted.');
+};
 
-    ERROR_DENIED = { code:-1, msg:"Access denied." };
-    SUCCESS = { code:0, msg:"OK" };
-1
-    _Notifications = Notifications; // ?
+const TimerNotification = () => {
+  useEffect(() => {
+    askNotification();
+    // If we want to do something with the notification when the app
+    // is active, we need to listen to notification events and
+    // handle them in a callback
+    const listener = Notifications.addListener(handleNotification);
+    return () => listener.remove();
+  }, []);
 
+  return <Input onChangeText={onSubmit} label="time in ms" />;
+};
 
-
-    static addListener = Notifications.addListener;
-    static push = Notifications.presentLocalNotificationAsync;
-
-    static async init (){
-
-        // permissions
-        const { status: existingStatus } = await Permissions.getAsync(Permissions.NOTIFICATIONS);
-        let finalStatus = existingStatus;
-        if (existingStatus !== 'granted') {
-            const { status } = await Permissions.askAsync(Permissions.NOTIFICATIONS);
-            finalStatus = status;
-        }
-        if (finalStatus !== 'granted'){
-            alert("Notification permissions denied.");
-            return Notification.ERROR_DENIED;
-        }
-
-        // notification channels/categories
-        //console.log(categories);
-        
-        await Notifications.createCategoryAsync('notifyUser', [
-            {
-                actionId: 'good',
-                button: {
-                    submitButtonTitle:'Good',
-                    placeholder:'good',
-                },
-                buttonTitle:'Good',
-                isDestructive: false,
-                isAuthenticationRequired: false,
-                button: {
-                    submitButtonTitle: 'Bad',
-                    placeholder: 'bad',
-                },
-                buttonTitle:'Bad',
-                isDestructive: false,
-                isAuthenticationRequired: false,
-            },
-        ]);
-        /*
-       await Notifications.createCategoryAsync('notifyUser', [
-        {
-            actionId: 'userWellness',
-            button: {
-                submitButtonTitle:'Good',
-                placeholder:'good',
-            },
-            buttonTitle:'Good',
-            isDestructive: false,
-            isAuthenticationRequired: false,
-            button: {
-                submitButtonTitle: 'Bad',
-                placeholder: 'bad',
-            },
-            buttonTitle:'Bad',
-            isDestructive: false,
-            isAuthenticationRequired: false,
-        }
-       ]); */
-    }
-
-
-
-    /* push the notification async
-    https://docs.expo.io/versions/latest/sdk/notifications/#arguments-2
-    */ 
-    static async pushNotification(notification, schedule){ // schedule?
-        if (typeof notification == "undefined"){
-            if (typeof this.notification == "undefined"){
-                throw "No notification is given to push.";
-            } else {
-                notification = this.notification;
-            }
-        }
-        dummyNotification.categoryId = 'good';
-        return await Notifications.presentLocalNotificationAsync(dummyNotification);
-    }
-
-
-}
-
-export class InitNotification extends Component {
-        static inti(){}
-        componentDidMount(){
-            NotificationWrapper.init();
-            
-            /* this.notificationSubscriber = */
-            NotificationWrapper.addListener(this.onNotificationPress);
-            let dummyNotification = {
-                title:"Good afternoon, Mr.Nobody",
-                body:"How are you feeling today?",
-                categoryId:"notifyUser", // see lib/notifications.js
-            }
-            NotificationWrapper.push(dummyNotification);
-        }
-
-        async onNotificationPress(notification){
-            console.log(notification);
-            Vibration.vibrate();
-            Alert.alert("test");
-        //Notification.setState({notification:notification})
-        }
-    
-}
+export default TimerNotification;
