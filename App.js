@@ -1,4 +1,4 @@
-import React, { useState, Component } from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
   StyleSheet, 
   View, 
@@ -20,7 +20,7 @@ import {
 } from 'react-native-elements';
 import { useFonts } from '@use-expo/font';
 import { AppLoading } from 'expo';
-import { render } from 'react-dom';
+import { NotificationWrapper } from './libs/Notifications';
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
 
@@ -47,8 +47,8 @@ export default function App() {
     'Inter-V': require('./assets/fonts/Inter-V.otf'),
   });
   //#endregion
-  //#region States
-  // useState Hook from Compononents
+  //#region Hooks
+    // useState Hook from Compononents
   let [gender, setGenderState] = useState({
     checkedGenderMale: false,
     checkedGenderFemale: false,
@@ -70,7 +70,27 @@ export default function App() {
   let [showSymtopms, setShowSymtopms] = useState({
     show: false,
   })
-  ////#endregion
+    //#endregion
+  
+  //#endregion
+
+
+  //#region Notification implementation
+  useEffect(() => {
+    NotificationWrapper.init();
+        
+        /* this.notificationSubscriber = */
+        NotificationWrapper.addListener(this.onNotificationPress);
+        let dummyNotification = {
+            title:"Good afternoon, Mr.Nobody",
+            body:"How are you feeling today?",
+            categoryId:"notifyUser", // see lib/notifications.js
+        }
+        NotificationWrapper.push(dummyNotification);
+  })
+  
+
+ 
   //#endregion
 
   if (!fontsLoaded) {
@@ -106,8 +126,6 @@ export default function App() {
           <View>
             <Text h4>Gender</Text>
             <View style={styles.checkBoxStyle}>
-            
-              { /*<Icon name="venus-mars" style={styles.genderIcon}/> */}
               <CheckBox 
                 title="Male"
                 checked={gender.checkedGenderMale}
@@ -258,14 +276,6 @@ export default function App() {
   }
 }
 
-//#region custom functions
-
-
-
-//#endregion
-const showSymptomList = {
-
-}
 //#region Theme style definitions
 const theme = {
   colors: {
@@ -326,6 +336,11 @@ const theme = {
     center: true,
     size: 20,
     height: 50,
+    fontFamily: 'Inter-Light',
+    containerStyle: {
+      backgroundColor: 'white',
+      borderColor: 'white',
+    }
   },
   Icon: {
     type: "font-awesome",
@@ -336,7 +351,8 @@ const theme = {
     style: {
       width: '94%',
       marginLeft: '2.5%',
-      backgroundColor: 'rgb(110, 120, 170)'
+      backgroundColor: 'rgb(110, 120, 170)',
+      height: 0.75,
     }
   },
 }
