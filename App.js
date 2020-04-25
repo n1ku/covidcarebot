@@ -76,18 +76,7 @@ export default function App() {
 
 
   //#region Notification implementation
-  useEffect(() => {
-    NotificationWrapper.init();
-        
-        /* this.notificationSubscriber = */
-        NotificationWrapper.addListener(this.onNotificationPress);
-        let dummyNotification = {
-            title:"Good afternoon, Mr.Nobody",
-            body:"How are you feeling today?",
-            categoryId:"notifyUser", // see lib/notifications.js
-        }
-        NotificationWrapper.push(dummyNotification);
-  })
+
   
 
  
