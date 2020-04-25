@@ -20,12 +20,15 @@ import {
   Button 
 } from 'react-native-elements';
 import { useFonts } from '@use-expo/font';
-import { AppLoading } from 'expo';
-import { NotificationWrapper, InitNotification } from './libs/Notifications';
+import { AppLoading, Notifications } from 'expo';
+import * as Permissions from 'expo-permissions';
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
 
+
+
 export default function App() {
+  
   //#region Hook inports
   //#region font import see: ./assets/fonts
   let [fontsLoaded] = useFonts({
@@ -70,6 +73,36 @@ export default function App() {
   });
   let [showSymtopms, setShowSymtopms] = useState({
     show: false,
+  })
+  let [hadContact, setHadContact] = useState({
+    checkedYes: false,
+    checkedNo: false,
+    checkedThinkSo: false,
+    checkedDontThinkSo: false,
+  })
+  let [sFever, setFever] = useState({
+    fever: false,
+  })
+  let [sCough, setCough] = useState({
+    cough: false,
+  })
+  let [sShortBreath, setShortBreath] = useState({
+    shortBreath: false,
+  })
+  let [sMuscleAche, setMuscleAche] = useState({
+    muscleAche: false,
+  })
+  let [sSoreThroat, setSoreThroat] = useState({
+    soreThroat: false,
+  })
+  let [sHeadache, setHeadache] = useState({
+    headache: false,
+  })
+  let [sChestPain, setChestPain] = useState({
+    chestPain: false,
+  })
+  let [sLossOfSmell, setLossOfSmell] = useState({
+    lossOfSmell: false,
   })
     //#endregion
   
@@ -155,7 +188,7 @@ export default function App() {
               containerStyle={styles.inputContainerStyle}
               placeholder="Size"
               keyboardType="numeric"
-              maxLength={4}
+              maxLength={2}
             />
           </View>
           <View style={styles.testResultCovid}>
@@ -179,10 +212,22 @@ export default function App() {
           <View style={styles.testResultCovid}>
               <Text h4>Have you had contact with someone who has been diagnosed with COVID-19 during the last 14 days?</Text>
               <View style={styles.checkBoxStyle}>
-                <CheckBox title="Yes"/>
-                <CheckBox title="I think so"/>
-                <CheckBox title="No"/>
-                <CheckBox title="I don't know"/>
+                <CheckBox 
+                  title="Yes"
+                  checked={hadContact.checkedYes}
+                  onPress={() => setHadContact({checkedYes: !hadContact.checkedYes})}/>
+                <CheckBox 
+                  title="I think so"
+                  checked={hadContact.checkedThinkSo}
+                  onPress={() => setHadContact({checkedThinkSo: !hadContact.checkedThinkSo})}/>
+                <CheckBox 
+                  title="No"
+                  checked={hadContact.checkedNo}
+                  onPress={() => setHadContact({checkedNo: !hadContact.checkedNo})}/>
+                <CheckBox 
+                  title="I don't know"
+                  checked={hadContact.checkedDontThinkSo}
+                  onPress={() => setHadContact({checkedDontThinkSo: !hadContact.checkedDontThinkSo})}/>
               </View>
               <Divider/>
           </View>
@@ -229,15 +274,54 @@ export default function App() {
             <View style={styles.symptopmsList}>
                 <Text h4>Which of the following symptoms do you have?</Text>
                 <View style={styles.checkBoxStyle2}>
-                  <CheckBox title="Fever"/>
-                  <CheckBox title="Cough"/>
-                  <CheckBox title="Shortness of Breath"/>
-                  <CheckBox title="Muscle ache"/>
-                  <CheckBox title="Sore Throat"/>
-                  <CheckBox title="Headache"/>
-                  <CheckBox title="Chest Pain"/>
-                  <CheckBox title="Loss of sense of taste"/>
-                  <CheckBox title="Chest Pain"/>
+                  <CheckBox 
+                    title="Fever"
+                    checked={sFever.fever}
+                    onPress={() => {
+                      setFever({fever: !sFever.fever})
+                    }}/>
+                  <CheckBox 
+                    title="Cough"
+                    checked={sCough.cough}
+                    onPress={() => {
+                      setCough({cough: !sCough.cough})
+                    }}/>
+                  <CheckBox 
+                    title="Shortness of Breath"
+                    checked={sShortBreath.shortBreath}
+                    onPress={() => {
+                      setShortBreath({shortBreath: !sShortBreath.shortBreath})
+                    }}/>
+                  <CheckBox 
+                    title="Muscle ache"
+                    checked={sMuscleAche.muscleAche}
+                    onPress={() => {
+                      setMuscleAche({muscleAche: !sMuscleAche.muscleAche})
+                    }}/>
+                  <CheckBox 
+                    title="Sore Throat"
+                    checked={sSoreThroat.soreThroat}
+                    onPress={() => {
+                      setSoreThroat({soreThroat: !sSoreThroat.soreThroat})
+                    }}/>
+                  <CheckBox 
+                    title="Headache"
+                    checked={sHeadache.headache}
+                    onPress={() => {
+                      setHeadache({headache: !sHeadache.headache})
+                    }}/>
+                  <CheckBox 
+                    title="Chest Pain"
+                    checked={sChestPain.chestPain}
+                    onPress={() => {
+                      setChestPain({chestPain: !sChestPain.chestPain})
+                    }}/>
+                  <CheckBox 
+                    title="Loss of sense of taste"
+                    checked={sLossOfSmell.lossOfSmell}
+                    onPress={() => {
+                      setLossOfSmell({lossOfSmell: !sLossOfSmell.lossOfSmell})
+                    }}/>
                 </View>
                 <Divider/> 
             
