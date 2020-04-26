@@ -2,11 +2,12 @@ import React, { useState, useEffect } from 'react';
 import { 
   StyleSheet, 
   View, 
-  Platform,
+  Vibration,
   Dimensions, 
   ScrollView,
   Alert,
-  Keyboard
+  Keyboard,
+  BackHandler
 } from 'react-native';
 import Slider from 'react-native-slider';
 import Constants from 'expo-constants';
@@ -25,6 +26,7 @@ import { AppLoading, Notifications } from 'expo';
 import * as Permissions from 'expo-permissions';
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
+
 const localNotification = {
   title: 'done',
   body: 'done!'
@@ -42,30 +44,96 @@ const onSubmit = text => {
     schedulingOptions,
   );
 };
-  handleNotification = () => {
-  console.warn('ok! got your notif');
-};
-
+/* 
 const askNotification = async () => {
   // We need to ask for Notification permissions for ios devices
   const { status } = await Permissions.askAsync(Permissions.NOTIFICATIONS);
   if (Constants.isDevice && status === 'granted')
     console.log('Notification permissions granted.');
 };
+*/
 
-const TimerNotification = () => {
-  useEffect(() => {
-    askNotification();
-    // If we want to do something with the notification when the app
-    // is active, we need to listen to notification events and
-    // handle them in a callback
-    const listener = Notifications.addListener(handleNotification);
-    return () => listener.remove();
-  }, []);
 
-  return <Input onChangeText={onSubmit} label="time in ms" />;
+const push = Notifications.presentLocalNotificationAsync;
+const scheduledPush = Notifications.scheduleLocalNotificationAsync;
+
+const init = async () => {
+
+  // permissions
+  const { status: existingStatus } = await Permissions.getAsync(Permissions.NOTIFICATIONS);
+  let finalStatus = existingStatus;
+  if (existingStatus !== 'granted') {
+      const { status } = await Permissions.askAsync(Permissions.NOTIFICATIONS);
+      finalStatus = status;
+  }
+  if (finalStatus !== 'granted'){
+      alert("Notification permissions denied.");
+      return Notification.ERROR_DENIED;
+  }
+
+  // notification channels/categories
+  //console.log(categories);
+  
+  await Notifications.createCategoryAsync('myCategoryName', [
+    {
+      actionId: 'vanillaButton',
+      buttonTitle: 'Plain Option',
+      isDestructive: false,
+      isAuthenticationRequired: false,
+    },
+  ]);
+  
+}
+
+const _handleNotification2 = notification => {
+  Vibration.vibrate();
+  push(
+    {
+      title:"Notification 3",
+      body:"notify3?",
+      categoryId:"myCategoryName",
+    }
+  )
+  }
+
+const _handleNotification = notification => {
+  Vibration.vibrate();
+  scheduledPush(
+    {
+      title:"Notification 2",
+      body:"notify2?",
+      categoryId:"myCategoryName",
+    },
+    {
+      repeat: "minute",
+    }
+  )
+
+    const listener = Notifications.addListener(_handleNotification2);
+
+/*  Alert.alert(
+    "Healthy",
+    "Do you feel healthy today?", 
+    [ 
+      { 
+        text: "yes",
+        onPress: () => {
+          Alert.alert(
+            "Glad!",
+            "I am very glad",
+            [
+              {onPress: () => { BackHandler.exitApp(); }}
+            ]
+          );
+        }
+      },
+      {
+        text: 'No' 
+      }
+    ],
+    { cancelable: false }
+  ); */
 };
-
 
 export default function App() {
   
@@ -147,10 +215,33 @@ export default function App() {
     //#endregion
   
   //#endregion
-  TimerNotification();
-  onSubmit();
-  //#region Notification implementation
 
+ //
+ useEffect(() => {
+  init();
+  let dummyNotification = {
+    title:"Good afternoon, Mr.Nobody",
+    body:"How are you feeling today?",
+    categoryId:"myCategoryName", // see lib/notifications.js
+  }
+  //push(dummyNotification);
+  scheduledPush(
+    {
+      title:"Good afternoon, Mr.Nobody",
+      body:"How are you feeling today?",
+      categoryId:"myCategoryName",
+    },
+    {
+      repeat: "minute",
+    }
+  );
+  // If we want to do something with the notification when the app
+  // is active, we need to listen to notification events and
+  // handle them in a callback
+  const listener = Notifications.addListener(_handleNotification);
+  return () => listener.remove();
+}, []);
+ //#region Notification implementation
 
 
  
